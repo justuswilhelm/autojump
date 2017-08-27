@@ -9,7 +9,7 @@ func (l *LocationDB) appendLocation(location string) {
 
 // RecordLocation creates or updates a visited location
 func (l *LocationDB) RecordLocation(location string) error {
-	index := l.findIndex(location)
+	index := l.FindIndexExact(location)
 	if index < 0 {
 		l.appendLocation(location)
 		return nil
