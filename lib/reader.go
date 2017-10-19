@@ -11,11 +11,11 @@ import (
 	"syscall"
 )
 
-// GetDBPath retrieves DB Path for user.
-func GetDBPath() (string, error) {
+// GetDBPath returns the folder in which the db is stored
+func GetDBFolder() (string, error) {
 	configHome := os.Getenv("XDG_CONFIG_HOME")
 	if configHome != "" {
-		return filepath.Join(configHome, DBLocation), nil
+		return filepath.Join(configHome, DBFolder), nil
 	}
 	usr, err := user.Current()
 	if err != nil {
@@ -23,7 +23,16 @@ func GetDBPath() (string, error) {
 			"Error when retrieving current user: %+v", err)
 	}
 	dir := usr.HomeDir
-	return filepath.Join(dir, ".config", DBLocation), nil
+	return filepath.Join(dir, ".config"), nil
+}
+
+// GetDBPath retrieves DB Path for user.
+func GetDBPath() (string, error) {
+	folder, err := GetDBFolder()
+	if err != nil {
+		return "", err
+	}
+	return filepath.Join(folder, DBName), nil
 }
 
 // ReadDB reads the database from a given path

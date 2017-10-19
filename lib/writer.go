@@ -22,8 +22,24 @@ func (l *LocationDB) dump(f *os.File) error {
 	return nil
 }
 
+func ensureFolder() error {
+	path, err := GetDBFolder()
+	if err != nil {
+		return fmt.Errorf("Error when retrieving DB path: %v", err)
+	}
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		if err := os.Mkdir(path, os.ModePerm); err != nil {
+			return fmt.Errorf("Error when creating folder: %v", err)
+		}
+	}
+	return nil
+}
+
 // DumpDB writes the database back to its filename
 func (l *LocationDB) DumpDB() error {
+	if err := ensureFolder(); err != nil {
+		log.Fatalf("Error when ensuring db folder: %+v", err)
+	}
 	f, err := os.OpenFile(l.FilePath, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		log.Fatalf("Error when opening location db %s", l.FilePath)

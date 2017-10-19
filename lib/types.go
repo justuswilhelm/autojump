@@ -2,7 +2,8 @@ package lib
 
 const (
 	// DBLocation stores location of autojump DB
-	DBLocation = "autojump/db"
+	DBFolder = "autojump"
+	DBName   = "db"
 )
 
 // Location stores a path and the corresponding frequency
